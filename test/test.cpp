@@ -1,17 +1,14 @@
-
 #include <iostream>
 #include <memory>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/cfg/env.h"
-#include "spdlog/spdlog-inl.h"
 #include <opencv2/core.hpp>
 
 int main(int arc, char** arv){
     cv::Mat mat;
-    // SPDLOG_LEVEL=info,mylogger=trace && ./example
-    spdlog::cfg::load_env_levels();
+    // export SPDLOG_LEVEL=info,mylogger=trace && ./demo
     spdlog::info("Welcome to spdlog version {}.{}.{}  !", SPDLOG_VER_MAJOR, SPDLOG_VER_MINOR, SPDLOG_VER_PATCH);
 
     spdlog::warn("Easy padding in numbers like {:08d}", 12);
@@ -30,11 +27,13 @@ int main(int arc, char** arv){
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("log.txt", true);
     std::vector<spdlog::sink_ptr> sinks {console_sink, file_sink};
-    // auto my_logger= std::make_shared<spdlog::logger>("mylogger",sinks.begin(), sinks.end());
-
-    // spdlog::logger logger("opendms", {console_sink, file_sink});
-    // auto my_logger= std::make_shared<spdlog::logger>("mylogger",{console_sink, file_sink});
-    // spdlog::initialize_logger(std::make_shared<spdlog::logger>("opendms", {console_sink, file_sink}));
+    auto my_logger= std::make_shared<spdlog::logger>("opendms",sinks.begin(), sinks.end());
+    spdlog::register_logger(my_logger);
+    spdlog::cfg::load_env_levels();
+    my_logger->info("hello");
+    my_logger->debug("debug info");
+    // spdlog::logger logger("opendms", sinks.begin(), sinks.end());
+    // auto t_logger = std::make_shared<spdlog::logger>("mylogger",{console_sink, file_sink});
     // auto t_logger = std::make_shared<spdlog::logger>("opendms", {console_sink, file_sink});
     // auto t_logger = new spdlog::logger("opendms", {console_sink, file_sink});
     // std::shared_ptr<spdlog::logger> logger(t_logger);
