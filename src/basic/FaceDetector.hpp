@@ -18,17 +18,18 @@
 #include <vector>
 #include <memory>
 #include <chrono>
-
+#include <utils/common_utils.hpp>
+#include <vector>
 #define num_featuremap 4
 #define hard_nms 1
 #define blending_nms 2 /* mix nms was been proposaled in paper blaze face, aims to minimize the temporal jitter*/
+namespace opendms{
 typedef struct FaceInfo {
     float x1;
     float y1;
     float x2;
     float y2;
     float score;
-
 } FaceInfo;
 
 class FaceDetector {
@@ -39,7 +40,7 @@ public:
 
     ~FaceDetector();
 
-    int detect(cv::Mat &img, std::vector<FaceInfo> &face_list);
+    int detect(const cv::Mat &img, std::vector<opendms::DetBox> &face_list);
 
 private:
     void generateBBox(std::vector<FaceInfo> &bbox_collection, MNN::Tensor *scores, MNN::Tensor *boxes);
@@ -53,8 +54,8 @@ private:
     MNN::Tensor *input_tensor = nullptr;
 
     int num_thread;
-    int image_w;
-    int image_h;
+    int image_w = 0;
+    int image_h = 0;
 
     int in_w;
     int in_h;
@@ -81,5 +82,5 @@ private:
 
     std::vector<std::vector<float>> priors = {};
 };
-
+}
 #endif /* FaceDetector_hpp */

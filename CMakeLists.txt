@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(opendms)
 
-SET(CMAKE_CXX_FLAGS "-std=c++14 -Wall -O3 -fPIC")
+# SET(CMAKE_CXX_FLAGS "-Wall -O3 -fPIC")
+SET(CMAKE_CXX_FLAGS "-Wall -O0 -g3 -fPIC")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Threads REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(spdlog REQUIRED)
@@ -19,9 +23,9 @@ SET(TEST_SRC
 
 FILE(GLOB DMS_baisc_src src/basic/*)
 FILE(GLOB DMS_utils_src src/utils/*)
+FILE(GLOB DMS_ui_src src/ui/*)
 set(DMS_LIB_SRC ${DMS_baisc_src} ${DMS_utils_src})
-message("lib src: ", ${DMS_LIB_SRC})
-
+set(DMS_EXTRA_SRC ${DMS_ui_src})
 INCLUDE_DIRECTORIES(
     src
     ${OpenCV_INCLUDE_DIRS}
@@ -34,7 +38,7 @@ LINK_DIRECTORIES(
   3rdparty/mnn/lib
 )
 
-add_executable(demo ${DMS_LIB_SRC} src/main.cpp)
+add_executable(demo ${DMS_LIB_SRC} ${DMS_EXTRA_SRC} src/main.cpp)
 target_include_directories(demo PRIVATE ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(demo PRIVATE  ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT} spdlog::spdlog MNN)
 

@@ -1,9 +1,11 @@
 {
-    "face_tracker":{
-        "face_detector":{
-            "model_path": "models/face_detector/version-RFB/RFB-320.mnn",
-            "score_threshold" : 0.7,
-            "iou_threshold" : 0.3
+    "pipline":{
+        "face_tracker":{
+            "face_detector":{
+                "model_path": "../models/face_detector/version-RFB/RFB-320.mnn",
+                "score_threshold" : 0.7,
+                "iou_threshold" : 0.3
+            }
         }
     }
 }

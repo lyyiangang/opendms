@@ -2,6 +2,7 @@
 #define FaceTracker_hpp
 #include <includes.hpp>
 #include "FaceDetector.hpp"
+#include <utils/common_utils.hpp>
 #include <memory>
 
 namespace opendms{
@@ -10,8 +11,13 @@ namespace opendms{
         FaceTracker(const json& j);
         ~FaceTracker();
 
+        bool ExtractFaceData(const Frame& frame);
+
+        const FaceData& GetFaceData()const;
+
     private:
         std::unique_ptr<FaceDetector> _face_detector;
+        FaceData _face_data;
     };
 }
 

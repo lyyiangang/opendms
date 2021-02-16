@@ -4,12 +4,16 @@
 #define clip(x, y) (x < 0 ? 0 : (x > y ? y : x))
 
 #include "FaceDetector.hpp"
-
+#include <algorithm>
+#include <includes.hpp>
+#include <opencv2/imgcodecs.hpp>
 using namespace std;
+namespace opendms{
 
 FaceDetector::FaceDetector(const std::string &mnn_path,
                      int input_width, int input_length, int num_thread_,
                      float score_threshold_, float iou_threshold_, int topk_) {
+    lg->info("loading face detector model from {}, score threshold:{}", mnn_path, score_threshold);
     num_thread = num_thread_;
     score_threshold = score_threshold_;
     iou_threshold = iou_threshold_;
@@ -67,12 +71,8 @@ FaceDetector::~FaceDetector() {
     ultraface_interpreter->releaseSession(ultraface_session);
 }
 
-int FaceDetector::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
-    if (raw_image.empty()) {
-        std::cout << "image is empty ,please check!" << std::endl;
-        return -1;
-    }
-
+int FaceDetector::detect(const cv::Mat &raw_image, std::vector<opendms::DetBox> &face_list) {
+    ASSERT(!raw_image.empty());
     image_h = raw_image.rows;
     image_w = raw_image.cols;
     cv::Mat image;
@@ -86,7 +86,6 @@ int FaceDetector::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
     pretreat->convert(image.data, in_w, in_h, image.step[0], input_tensor);
 
     auto start = chrono::steady_clock::now();
-
 
     // run network
     ultraface_interpreter->runSession(ultraface_session);
@@ -108,13 +107,19 @@ int FaceDetector::detect(cv::Mat &raw_image, std::vector<FaceInfo> &face_list) {
 
     std::vector<FaceInfo> bbox_collection;
 
-
     auto end = chrono::steady_clock::now();
     chrono::duration<double> elapsed = end - start;
-    cout << "inference time:" << elapsed.count() << " s" << endl;
+    lg->debug("inference time:{}s", elapsed.count()); 
 
     generateBBox(bbox_collection, tensor_scores, tensor_boxes);
-    nms(bbox_collection, face_list);
+    std::vector<FaceInfo> res;
+    nms(bbox_collection, res);
+    std::transform(res.begin(), res.end(), std::back_inserter(face_list), [](auto& face_info){
+        DetBox box;
+        box.rect = cv::Rect2f(cv::Point2f(face_info.x1, face_info.y1), cv::Point2f(face_info.x2, face_info.y2));
+        box.score = face_info.score;
+        return box;
+    });
     return 0;
 }
 
@@ -213,9 +218,10 @@ void FaceDetector::nms(std::vector<FaceInfo> &input, std::vector<FaceInfo> &outp
                 break;
             }
             default: {
-                printf("wrong type of nms.");
-                exit(-1);
+                lg->critical("wrong type of nms.");
+                abort();
             }
         }
     }
+}
 }

@@ -5,6 +5,7 @@
 #include <memory>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
+#include <basic/Frame.hpp>
 namespace opendms
 {
     class FrameSource{
@@ -12,7 +13,7 @@ namespace opendms
             FrameSource(const std::string& video_name);
             ~FrameSource();
 
-            cv::Mat frame();
+            Frame frame();
 
             FrameSource() = delete;
             FrameSource(const FrameSource&) = delete;
