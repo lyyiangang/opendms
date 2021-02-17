@@ -30,7 +30,7 @@ INCLUDE_DIRECTORIES(
     src
     ${OpenCV_INCLUDE_DIRS}
     3rdparty/nlohmann
-    3rdparty/mnn/include
+    3rdparty/
 )
 
 LINK_DIRECTORIES(

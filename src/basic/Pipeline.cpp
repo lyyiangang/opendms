@@ -1,6 +1,5 @@
 #include "Pipeline.hpp"
 
-
 namespace opendms
 {
     Pipeline::Pipeline(const json& js){
