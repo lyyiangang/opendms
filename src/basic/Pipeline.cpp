@@ -4,7 +4,6 @@ namespace opendms
 {
     Pipeline::Pipeline(const json& js){
         _face_tracker.reset(new FaceTracker(js["face_tracker"]));
-
     }
 
     Pipeline::~Pipeline(){

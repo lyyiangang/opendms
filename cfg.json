@@ -5,6 +5,9 @@
                 "model_path": "../models/face_detector/version-RFB/RFB-320.mnn",
                 "score_threshold" : 0.7,
                 "iou_threshold" : 0.3
+            },
+            "face_landmark_detector":{
+                "model_path" : "models/landmark_detector/pfld_mb1.0.mnn"
             }
         }
     }

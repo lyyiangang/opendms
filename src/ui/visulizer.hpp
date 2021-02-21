@@ -13,6 +13,8 @@ namespace opendms
             void Render(const Frame& frame, const FaceData& face_data );
 
             bool Show(int wait_key = 1)const;
+
+            static void DrawLandmark(cv::Mat& img, const cv::Mat& landmarks);
         private:
             Frame _frame;
     };

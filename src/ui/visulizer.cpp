@@ -14,15 +14,9 @@ namespace opendms
     }
 
     void Visulizer::Render(const Frame& frame, const FaceData& face_data ){
-        // cv::Rect2f square_box = Square(face_data.face_bbox.rect);
-        // cv::Mat face_img = Crop(frame.img, square_box);
-        // if(!face_img.empty())
-        // {
-        //     cv::imwrite("face.png", face_img);
-        //     cv::imshow("face", face_img);
-        // }
         _frame = frame;
         cv::rectangle(_frame.img, face_data.face_bbox.rect, {0, 0, 255});
+        Visulizer::DrawLandmark(_frame.img, face_data.landmark);
     }
     
     bool Visulizer::Show(int wait_key)const{
@@ -32,5 +26,16 @@ namespace opendms
             return true;
         }
         return false;
+    }
+    void Visulizer::DrawLandmark(cv::Mat& img, const cv::Mat& landmarks){
+        cv::Mat lnds = landmarks;
+        lnds.convertTo(lnds, CV_32SC2);
+        if(lnds.rows != 2){
+            lnds = lnds.t();
+        }
+        lnds.forEach<cv::Point>([img](cv::Point& pt, const int* idx){
+            cv::circle(img, pt, 3, {0, 0, 255}, -1);
+        });
+
     }
 } // namespace opendms

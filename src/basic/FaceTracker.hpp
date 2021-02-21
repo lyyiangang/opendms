@@ -1,7 +1,8 @@
 #ifndef FaceTracker_hpp
 #define FaceTracker_hpp
 #include <includes.hpp>
-#include "FaceDetector.hpp"
+#include <basic/FaceLandmarkDetector.hpp>
+#include <basic/FaceDetector.hpp>
 #include <utils/common_utils.hpp>
 #include <memory>
 
@@ -17,7 +18,9 @@ namespace opendms{
 
     private:
         std::unique_ptr<FaceDetector> _face_detector;
+        std::unique_ptr<FaceLandmarkDetector> _face_lnd_detector;
         FaceData _face_data;
+
     };
 }
 

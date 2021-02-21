@@ -10,13 +10,11 @@ namespace opendms
         cv::Rect2f rect;
         float score = 0.0;
     };
-    using Landmark68 = cv::Point2f[68];
-    using Landmark68_3d = cv::Point3f[68];
     struct FaceData{
         bool found_face = false;
         DetBox face_bbox;
-        Landmark68 landmark;
-        Landmark68_3d landmark_3d;
+        cv::Mat landmark;
+        cv::Mat landmark_3d;
         cv::Vec3f pose_pyr = {0, 0, 0};
     };
 
@@ -44,6 +42,7 @@ namespace opendms
         new_pt.y -= val;
         return new_pt; 
     }
+
 } // namespace opendms
 
 #endif 
