@@ -37,7 +37,7 @@ LINK_DIRECTORIES(
   ${OpenCV_LIB_DIRS}
   3rdparty/MNN/lib
 )
-
+MESSAGE("source files:", ${DMS_LIB_SRC}, ${DMS_EXTRA_SRC})
 add_executable(demo ${DMS_LIB_SRC} ${DMS_EXTRA_SRC} src/main.cpp)
 target_include_directories(demo PRIVATE ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(demo PRIVATE  ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT} spdlog::spdlog MNN)

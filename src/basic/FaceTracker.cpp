@@ -5,7 +5,7 @@ namespace opendms{
     FaceTracker::FaceTracker(const json& j){
         _face_detector = std::make_unique<FaceDetector>(j["face_detector"]["model_path"], \
             320, 240, 4, j["face_detector"]["score_threshold"]);
-        _face_lnd_detector = std::make_unique<FaceLandmarkDetector>();
+        _face_lnd_detector = std::make_unique<FaceLandmarkDetector>(j["face_landmark_detector"]["model_path"]);
     } 
 
     FaceTracker::~FaceTracker(){
@@ -23,6 +23,10 @@ namespace opendms{
         _face_data.face_bbox = SelectBestFace(face_boxes);
         _face_lnd_detector->Process(frame, _face_data.face_bbox.rect);
         _face_data.landmark = _face_lnd_detector->landmark68;
+        _face_data.landmark_3d = _face_lnd_detector->landmark68_3d;
+        _face_data.head_rt = _face_lnd_detector->head_rt;
+        _face_data.pyr_to_cam = _face_lnd_detector->pyr_to_cam;
+        std::cout<<"head pyr(deg):"<< _face_data.pyr_to_cam * 180 / M_PI<<std::endl;;
         return true;
     }
 

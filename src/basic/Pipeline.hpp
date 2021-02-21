@@ -2,7 +2,9 @@
 #define Pipline_hpp
 #include <includes.hpp>
 #include <basic/FaceTracker.hpp>
+#include <basic/Distraction.hpp>
 #include <utils/common_utils.hpp>
+
 namespace opendms
 {
     class Pipeline{
@@ -15,6 +17,7 @@ namespace opendms
 
         private:
             std::unique_ptr<FaceTracker> _face_tracker;
+            std::unique_ptr<Distraction> _distract;
             FaceData _face_data; 
     };
 } // namespace opendms

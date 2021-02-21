@@ -12,12 +12,14 @@ namespace opendms
 {
     class FaceLandmarkDetector{
         public:
-            FaceLandmarkDetector();
+            FaceLandmarkDetector(const std::string& model_file);
             ~FaceLandmarkDetector();
     
             bool Process(const Frame& frame, const cv::Rect2f& face_box);
 
-            cv::Mat landmark68;
+            cv::Mat landmark68, landmark68_3d;
+            cv::Vec6d head_rt; // head_rt[:3]: rotation vector, head_rt[-3:]: translation vec
+            cv::Vec3d pyr_to_cam; // head pose to camera coordinate system
 
         private:
             void Preprocess(cv::Mat& img);

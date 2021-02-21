@@ -1,5 +1,10 @@
 {
     "pipline":{
+        "camera":{
+            "intrinsic_matrix":[],
+            "dist_coefs":[],
+            "frame_size":[]
+        },
         "face_tracker":{
             "face_detector":{
                 "model_path": "../models/face_detector/version-RFB/RFB-320.mnn",
@@ -7,8 +12,11 @@
                 "iou_threshold" : 0.3
             },
             "face_landmark_detector":{
-                "model_path" : "models/landmark_detector/pfld_mb1.0.mnn"
+                "model_path" : "../models/landmark_detector/pfld_mb1.0.mnn"
             }
+        },
+        "distraction":{
+
         }
     }
 }
