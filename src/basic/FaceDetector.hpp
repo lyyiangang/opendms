@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include <mnn/include/Interpreter.hpp>
-#include <mnn/include/MNNDefine.h>
-#include <mnn/include/Tensor.hpp>
-#include <mnn/include/ImageProcess.hpp>
+#include <MNN/Interpreter.hpp>
+#include <MNN/MNNDefine.h>
+#include <MNN/Tensor.hpp>
+#include <MNN/ImageProcess.hpp>
 #include <opencv2/opencv.hpp>
 #include <algorithm>
 #include <iostream>

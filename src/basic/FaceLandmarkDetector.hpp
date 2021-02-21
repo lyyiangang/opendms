@@ -3,8 +3,8 @@
 #include <includes.hpp>
 #include <basic/Frame.hpp>
 #include <opencv2/core.hpp>
-#include <mnn/include/ImageProcess.hpp>
-#include <mnn/include/Interpreter.hpp>
+#include <MNN/ImageProcess.hpp>
+#include <MNN/Interpreter.hpp>
 #include <utils/common_utils.hpp>
 
 #include <memory>

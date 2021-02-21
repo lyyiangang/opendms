@@ -3,6 +3,7 @@
 #include <opencv2/imgproc.hpp>
 #include <utils/common_utils.hpp>
 #include <includes.hpp>
+#include <iostream>
 namespace opendms
 {
     Visulizer::Visulizer(){
@@ -29,13 +30,11 @@ namespace opendms
     }
     void Visulizer::DrawLandmark(cv::Mat& img, const cv::Mat& landmarks){
         cv::Mat lnds = landmarks;
-        lnds.convertTo(lnds, CV_32SC2);
-        if(lnds.rows != 2){
+        if(lnds.cols != 2){
             lnds = lnds.t();
         }
-        lnds.forEach<cv::Point>([img](cv::Point& pt, const int* idx){
+        lnds.forEach<cv::Point2f>([img](auto& pt, const int* idx){
             cv::circle(img, pt, 3, {0, 0, 255}, -1);
         });
-
     }
 } // namespace opendms

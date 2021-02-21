@@ -1,5 +1,6 @@
 #include <basic/FaceLandmarkDetector.hpp>
 #include <opencv2/imgproc.hpp>
+// #include <opencv2/imgcodecs.hpp>
 #include <memory>
 #include <iostream>
 #include <utils/common_utils.hpp>
@@ -30,18 +31,20 @@ namespace opendms
     bool FaceLandmarkDetector::Process(const Frame& frame, const cv::Rect2f& face_box){
         cv::Rect2f square_face_rect = Square(face_box);
         cv::Mat face_img = Crop(frame.img, square_face_rect);
+        // cv::imwrite("debug.png", face_img);
         // lg->debug("target rect:{}, out_img.size:{}", square_face_rect, face_img.size);
         // std::cout<<"target rect:"<<square_face_rect<<"out_img.size:"<< face_img.size<<std::endl;
         const int net_size[2] = {112, 112};
         cv::resize(face_img, face_img, {net_size[0], net_size[1]});
-        MNN::Tensor* input_ts = _interpreter->getSessionInput(_session, nullptr);
+        MNN::Tensor* input_ts = _interpreter->getSessionInput(_session, "input.1");
         _preprocess->convert(face_img.data, net_size[0], net_size[1], 0, input_ts);
         _interpreter->runSession(_session); 
-        MNN::Tensor* lnd_output_ts = _interpreter->getSessionOutput(_session, nullptr);
+        MNN::Tensor* lnd_output_ts = _interpreter->getSessionOutput(_session, "442");
         MNN::Tensor host_ts(lnd_output_ts, MNN::Tensor::CAFFE);
+        lnd_output_ts->copyToHostTensor(&host_ts);
         cv::Mat lnd_mat(68, 2, CV_32FC1, host_ts.host<float>());
-        lnd_mat.col(0) = lnd_mat.col(0) * face_img.cols + square_face_rect.x;
-        lnd_mat.col(1) = lnd_mat.col(1) * face_img.rows + square_face_rect.y;
+        lnd_mat.col(0) = lnd_mat.col(0) * square_face_rect.width + square_face_rect.x;
+        lnd_mat.col(1) = lnd_mat.col(1) * square_face_rect.height + square_face_rect.y;
         landmark68 = lnd_mat;
         return true;
     }

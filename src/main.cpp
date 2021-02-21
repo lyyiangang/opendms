@@ -33,7 +33,7 @@ int main(int arc, char** argv){
         pipeline.ProcessFrame(frame);
         const FaceData& det_result = pipeline.GetFaceData();
         vis.Render(frame, det_result);
-        bool do_exit = vis.Show(1000);
+        bool do_exit = vis.Show();
         if(do_exit){
             lg->warn("exit loop");
             break;

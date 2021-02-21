@@ -35,7 +35,7 @@ INCLUDE_DIRECTORIES(
 
 LINK_DIRECTORIES(
   ${OpenCV_LIB_DIRS}
-  3rdparty/mnn/lib
+  3rdparty/MNN/lib
 )
 
 add_executable(demo ${DMS_LIB_SRC} ${DMS_EXTRA_SRC} src/main.cpp)
