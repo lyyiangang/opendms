@@ -26,7 +26,6 @@ namespace opendms{
         _face_data.landmark_3d = _face_lnd_detector->landmark68_3d;
         _face_data.head_rt = _face_lnd_detector->head_rt;
         _face_data.pyr_to_cam = _face_lnd_detector->pyr_to_cam;
-        std::cout<<"head pyr(deg):"<< _face_data.pyr_to_cam * 180 / M_PI<<std::endl;;
         return true;
     }
 

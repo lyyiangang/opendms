@@ -8,6 +8,7 @@
 #include <memory>
 #include <opencv2/core.hpp>
 #include <opencv2/calib3d.hpp>
+#include <iostream>
 namespace opendms
 {
     std::shared_ptr<spdlog::logger> RegistLogger(){
@@ -160,4 +161,37 @@ namespace opendms
         cv::hconcat(template_face_double, cv::Mat::zeros(template_face_double.rows, 1, CV_64FC1), homo_template_face);
         return (pose_mat * homo_template_face.t()).t();
     }
+
+    TimeSeries::TimeSeries(){
+
+    }
+
+    TimeSeries::~TimeSeries(){
+
+    }
+
+    void TimeSeries::AddFrameData(double time, float val){
+        const int max_frames = 60;
+        TData data(time, val);
+        if(_q.size() > max_frames){
+            _q.pop_front();
+        }
+        _q.push_back(data);
+    }
+
+    bool TimeSeries::AverageValueInTimeslice(float timeslice_sec, float* mean_val){
+        ASSERT(timeslice_sec > 0);
+        if(_q.empty())
+            return false;
+        float cur_time = _q.back().timestamp;
+        auto it = std::find_if(_q.rbegin(), _q.rend(), [cur_time, timeslice_sec](auto d){return Sec(cur_time - d.timestamp) > timeslice_sec;});
+        if(it == _q.rend())
+            return false;
+        float sum = 0;
+        for(auto cur_it = _q.rbegin(); cur_it != it; ++cur_it){
+            sum += cur_it->val;
+        }
+        *mean_val = sum / std::distance(_q.rbegin(), it);
+    }
+
 } // namespace opendms

@@ -22,7 +22,8 @@ namespace opendms
     Frame FrameSource::frame(){
         if(_cap->isOpened()){
             cv::Mat frame;
-            _cap->read(frame);
+            bool success = _cap->read(frame);
+            ASSERT(success);
             double timestamp = _cap->get(cv::CAP_PROP_POS_MSEC);
             return Frame(frame, timestamp);
         }

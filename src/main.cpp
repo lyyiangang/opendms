@@ -21,7 +21,7 @@ int main(int arc, char** argv){
         lg->critical("error when parse config file.messgae:{}, id:{}", e.what(), e.id);
         abort();
     }
-    FrameSource frame_source("../p_data/rgb_640x480.avi");
+    FrameSource frame_source("../p_data/ir_test.avi");
     Pipeline pipeline(js["pipline"]);
     Visulizer vis;
     while(1){

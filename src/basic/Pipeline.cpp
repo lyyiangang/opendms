@@ -18,8 +18,10 @@ namespace opendms
     bool Pipeline::ProcessFrame(const Frame& frame){
         _face_tracker->ExtractFaceData(frame);
         _face_data = _face_tracker->GetFaceData();
-
+        if(!_face_data.found_face)
+            return false;
         _distract->Process(frame, _face_data);
+        // std::cout<<"pip "<<_face_data.head_rt;
         return true;
     }
 } // namespace opendms

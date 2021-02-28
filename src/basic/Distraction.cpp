@@ -14,8 +14,10 @@ namespace opendms
     bool Distraction::Process(const Frame& frame, const FaceData& face_data){
         cv::Vec3f pyr_deg =face_data.pyr_to_cam * 180 / M_PI;
         is_distract = false;
-        if(std::abs(pyr_deg[1]) > _threshold){
-            is_distract = true;
+        _series.AddFrameData(frame.timestamp, pyr_deg[1]);
+        float mean_yaw = 0;
+        if(_series.AverageValueInTimeslice(1.0, &mean_yaw)){
+            is_distract = mean_yaw > _threshold;
         }
         return true;
     }

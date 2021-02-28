@@ -15,6 +15,7 @@ namespace opendms
             bool is_distract;
         private:
             float _threshold;
+            TimeSeries _series;
     };
 } // namespace opendms
 

@@ -16,7 +16,7 @@ namespace opendms{
                 return *this;
             }
             cv::Mat img;
-            double timestamp;
+            double timestamp;//mili sec
     };
 }
 #endif 
