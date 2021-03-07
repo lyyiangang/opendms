@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(opendms)
+message(STATUS "\tProcessor: ${CMAKE_SYSTEM_PROCESSOR}")
+IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch64")
+    CMAKE_C_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-gcc 
+    CMAKE_CXX_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-g++ 
+ENDIF()
 
 # SET(CMAKE_CXX_FLAGS "-Wall -O3 -fPIC")
 SET(CMAKE_CXX_FLAGS "-Wall -O0 -g3 -fPIC")
@@ -26,6 +31,7 @@ FILE(GLOB DMS_utils_src src/utils/*)
 FILE(GLOB DMS_ui_src src/ui/*)
 set(DMS_LIB_SRC ${DMS_baisc_src} ${DMS_utils_src})
 set(DMS_EXTRA_SRC ${DMS_ui_src})
+
 INCLUDE_DIRECTORIES(
     src
     ${OpenCV_INCLUDE_DIRS}
