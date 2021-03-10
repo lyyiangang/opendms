@@ -1,4 +1,5 @@
 # docker build -f Dockerfile.txt -t opendms .
+# --build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}
 FROM ubuntu:18.04
 ENV OCV=4.5.1
 RUN apt-get update 
@@ -12,6 +13,7 @@ WORKDIR /
 # build opencv for x86
 RUN unzip ${OCV}.zip && cd opencv-${OCV} && \
     mkdir build && cd build && cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON \
+    -DCMAKE_INSTALL_PREFIX=/install_x86 \
     -D WITH_V4L=ON  -DBUILD_TIFF=ON -DWITH_GTK_2_X=ON .. && \
     make -j3 install
 
@@ -25,23 +27,25 @@ RUN cd opencv-${OCV} && mkdir build_aarch64 && cd build_aarch64 && cmake .. \
     -DCMAKE_TOOLCHAIN_FILE=../platforms/linux/aarch64-gnu.toolchain.cmake \
 	-DCMAKE_C_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-gcc \
 	-DCMAKE_CXX_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-g++ \
+    -DCMAKE_INSTALL_PREFIX=/install_aarch64 \
     -DWITH_TBB=ON \
     -DWITH_V4L=ON  \
     -DBUILD_TIFF=ON \
+    -DBUILD_TESTS=OFF \
+    -DBUILD_PERF_TESTS=OFF \
     -DWITH_GTK_2_X=ON &&\
 	make -j3 install
 
 # install protobuf for MNN
 WORKDIR /
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protobuf-all-3.13.0.tar.gz && \
-    tar -xvf protobuf-all-3.13.0.tar.gz && cd protobuf-3.13.0/ && \
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protobuf-all-3.13.0.tar.gz
+RUN tar -xvf protobuf-all-3.13.0.tar.gz && cd protobuf-3.13.0/ && \
     ./autogen.sh && \
     ./configure &&  \
-    make install -j3 && ldconfig 
+    make install && ldconfig
 
 # build MNN x86
 WORKDIR /
-# RUN  https://github.com/alibaba/MNN/archive/${MNN_VER}.zip
 RUN git clone  https://github.com/alibaba/MNN.git
 # RUN wget https://github.com/Kitware/CMake/releases/download/v3.20.0-rc3/cmake-3.20.0-rc3-linux-x86_64.tar.gz
 # install cmake to /usr/bin, MNN need newer cmake
@@ -49,6 +53,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.20.0-rc3/cmake-3.
 # RUN tar -xvf cmake-3.20.0-rc3-linux-x86_64.tar.gz && cp /cmake-3.20.0-rc3-linux-x86_64/bin/* /usr/bin/
 RUN cd MNN/ && ./schema/generate.sh && \
     mkdir build && cd build && cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/install_x86 \
     -DMNN_BUILD_CONVERTER=true \
     -DCMAKE_BUILD_TYPE=Release \
 	-DMNN_BUILD_DEMO=ON \
@@ -58,6 +63,7 @@ RUN cd MNN/ && ./schema/generate.sh && \
 #/usr/local/include/, /usr/local/lib/
 # build MNN aarch64
 RUN cd /MNN && mkdir build_aarch64 && cd build_aarch64 && cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/install_aarch64 \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DMNN_BUILD_DEMO=ON \
 	-DMNN_BUILD_BENCHMARK=true \
@@ -66,8 +72,15 @@ RUN cd /MNN && mkdir build_aarch64 && cd build_aarch64 && cmake .. \
 	-DCMAKE_SYSTEM_PROCESSOR=aarch64 \
 	-DCMAKE_C_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-gcc \
 	-DCMAKE_CXX_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-g++ && \
-	make -j3
+	make -j3 install
 
-RUN git clone https://github.com/gabime/spdlog.git && cd spdlog && mkdir build && cd build &&  cmake .. && make -j3 install 
+RUN git clone https://github.com/gabime/spdlog.git 
+RUn cd /spdlog && mkdir build && cd build &&  cmake \
+    -DCMAKE_INSTALL_PREFIX=/install_x86 .. && make -j3 install 
+RUn cd /spdlog && mkdir build_aarch64 && cd build_aarch64 &&  cmake \
+    -DCMAKE_INSTALL_PREFIX=/install_aarch64 \
+	-DCMAKE_C_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-gcc \
+	-DCMAKE_CXX_COMPILER=${cross_compile_toolchain}/bin/aarch64-linux-gnu-g++ .. && \
+    make -j3 install 
 
 RUN apt-get install -y gdb vim
