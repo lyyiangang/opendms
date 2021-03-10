@@ -1,6 +1,7 @@
 #ifndef Frame_hpp
 #define Frame_hpp
 #include <opencv2/core.hpp>
+
 namespace opendms{
     class Frame{
         public:

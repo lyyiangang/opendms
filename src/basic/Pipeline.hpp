@@ -3,6 +3,7 @@
 #include <includes.hpp>
 #include <basic/FaceTracker.hpp>
 #include <basic/Distraction.hpp>
+#include <basic/Fatigue.hpp>
 #include <utils/common_utils.hpp>
 
 namespace opendms
@@ -18,6 +19,7 @@ namespace opendms
         private:
             std::unique_ptr<FaceTracker> _face_tracker;
             std::unique_ptr<Distraction> _distract;
+            std::unique_ptr<Fatigue> _fatigue;
             FaceData _face_data; 
     };
 } // namespace opendms

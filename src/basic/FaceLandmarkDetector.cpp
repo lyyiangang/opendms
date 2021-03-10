@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <utils/common_utils.hpp>
+#include <utils/AutoTime.hpp>
 namespace opendms
 {
     FaceLandmarkDetector::FaceLandmarkDetector(const std::string& model_file){
@@ -29,6 +30,7 @@ namespace opendms
     }
 
     bool FaceLandmarkDetector::Process(const Frame& frame, const cv::Rect2f& face_box){
+        AUTOTIME;
         cv::Rect2f square_face_rect = Square(face_box);
         cv::Mat face_img = Crop(frame.img, square_face_rect);
         const int net_size[2] = {112, 112};
