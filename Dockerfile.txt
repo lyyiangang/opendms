@@ -1,4 +1,4 @@
-# docker build -f Dockerfile.txt -t opendms .
+# sudo docker build -f Dockerfile.txt -t opendms . --build-arg PROXY=${https_proxy}
 # --build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}
 FROM ubuntu:18.04
 ENV OCV=4.5.1
@@ -46,6 +46,8 @@ RUN tar -xvf protobuf-all-3.13.0.tar.gz && cd protobuf-3.13.0/ && \
 
 # build MNN x86
 WORKDIR /
+ARG PROXY
+RUN git config --global https.proxy $PROXY
 RUN git clone  https://github.com/alibaba/MNN.git
 # RUN wget https://github.com/Kitware/CMake/releases/download/v3.20.0-rc3/cmake-3.20.0-rc3-linux-x86_64.tar.gz
 # install cmake to /usr/bin, MNN need newer cmake
