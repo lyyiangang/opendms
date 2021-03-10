@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <includes.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <utils/AutoTime.hpp>
 using namespace std;
 namespace opendms{
 
@@ -73,6 +74,7 @@ FaceDetector::~FaceDetector() {
 
 int FaceDetector::detect(const cv::Mat &raw_image, std::vector<opendms::DetBox> &face_list) {
     ASSERT(!raw_image.empty());
+    AUTOTIME;
     image_h = raw_image.rows;
     image_w = raw_image.cols;
     cv::Mat image;

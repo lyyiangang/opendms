@@ -7,7 +7,6 @@
 #endif
 #include "AutoTime.hpp"
 #include <includes.hpp>
-
 namespace opendms {
 
 Timer::Timer() {
@@ -57,7 +56,8 @@ AutoTime::AutoTime(int line, const char* func) : Timer() {
 
 AutoTime::~AutoTime() {
     auto timeInUs = durationInUs();
-    lg->info("%s, %d, cost time: %f ms\n", mName, mLine, (float)timeInUs / 1000.0f);
+    printf("%s, %d, cost time: %f ms\n", mName, mLine, (float)timeInUs / 1000.0f);
+
     free(mName);
 }
 

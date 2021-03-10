@@ -1,5 +1,6 @@
 {
-    "pipline":{
+    "log_level" : "debug",
+    "pipeline":{
         "camera":{
             "intrinsic_matrix":[],
             "dist_coefs":[],

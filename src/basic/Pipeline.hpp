@@ -3,6 +3,7 @@
 #include <includes.hpp>
 #include <basic/FaceTracker.hpp>
 #include <basic/Distraction.hpp>
+#include <basic/Fatigue.hpp>
 #include <utils/common_utils.hpp>
 
 namespace opendms
@@ -12,12 +13,13 @@ namespace opendms
             Pipeline(const json& js);
             ~Pipeline();
 
-            bool ProcessFrame(const Frame& frame);
+            int ProcessFrame(const Frame& frame);
             const FaceData& GetFaceData()const;
 
         private:
             std::unique_ptr<FaceTracker> _face_tracker;
             std::unique_ptr<Distraction> _distract;
+            std::unique_ptr<Fatigue> _fatigue;
             FaceData _face_data; 
     };
 } // namespace opendms
