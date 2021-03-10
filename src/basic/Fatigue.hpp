@@ -1,7 +1,7 @@
 #ifndef Fatigue_hpp
 #define Fatigue_hpp
 #include <includes.hpp>
-
+#include <utils/common_utils.hpp>
 namespace opendms
 {
     class Fatigue{
