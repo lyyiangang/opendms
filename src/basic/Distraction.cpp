@@ -4,7 +4,8 @@ namespace opendms
 {
     Distraction::Distraction(float warn_angle_threshold):
         _threshold(warn_angle_threshold),
-        is_distract(false){
+        is_distract(false)
+    {
     }
 
     Distraction::~Distraction(){

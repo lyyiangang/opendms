@@ -1,6 +1,7 @@
 #ifndef AutoTime_hpp
 #define AutoTime_hpp
 
+#define OPEN_TIME_TRACE 0
 #include <stdint.h>
 #include <stdio.h>
 

@@ -60,7 +60,7 @@ RUN cd MNN/ && ./schema/generate.sh && \
 	-DMNN_BUILD_BENCHMARK=true \
 	-DCMAKE_SYSTEM_NAME=Linux  && \
     make -j3 install 
-#/usr/local/include/, /usr/local/lib/
+
 # build MNN aarch64
 RUN cd /MNN && mkdir build_aarch64 && cd build_aarch64 && cmake .. \
     -DCMAKE_INSTALL_PREFIX=/install_aarch64 \
