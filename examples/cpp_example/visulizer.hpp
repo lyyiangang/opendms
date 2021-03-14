@@ -1,7 +1,7 @@
 #ifndef visulizer_hpp
 #define visulizer_hpp
-#include <utils/common_utils.hpp>
-#include <basic/Frame.hpp>
+#include <FaceData.hpp>
+#include <Frame.hpp>
 
 namespace opendms
 {
@@ -12,7 +12,7 @@ namespace opendms
 
             void Render(const Frame& frame, const FaceData& face_data );
 
-            bool Show(int wait_key = 1)const;
+            void Show()const;
 
             static void DrawLandmark(cv::Mat& img, const cv::Mat& landmarks);
         private:

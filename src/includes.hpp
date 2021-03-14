@@ -1,7 +1,10 @@
+#ifndef includes_hpp
+#define includes_hpp
 
-#include <spdlog/spdlog.h>
-#include <basic/Frame.hpp>
+#include <Frame.hpp>
+#include <error_code.hpp>
 #include <json.hpp>
+#include <spdlog/spdlog.h>
 #include <memory>
 #include <vector>
 
@@ -27,3 +30,5 @@
 #endif
 
 using json = nlohmann::json;
+
+#endif

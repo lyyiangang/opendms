@@ -1,8 +1,6 @@
 #include "visulizer.hpp"
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include <utils/common_utils.hpp>
-#include <includes.hpp>
 #include <iostream>
 #include <iomanip>
 namespace opendms
@@ -35,13 +33,8 @@ namespace opendms
         cv::putText(_frame.img, ss.str(), pos, cv::FONT_HERSHEY_COMPLEX, 1.0, {0, 0, 255});
     }
     
-    bool Visulizer::Show(int wait_key)const{
+    void Visulizer::Show()const{
         cv::imshow("opendms", _frame.img);
-        int key = cv::waitKey(wait_key);
-        if(key == 'q'){
-            return true;
-        }
-        return false;
     }
 
     void Visulizer::DrawLandmark(cv::Mat& img, const cv::Mat& landmarks){

@@ -13,7 +13,7 @@ namespace opendms
             Pipeline(const json& js);
             ~Pipeline();
 
-            bool ProcessFrame(const Frame& frame);
+            int ProcessFrame(const Frame& frame);
             const FaceData& GetFaceData()const;
 
         private:

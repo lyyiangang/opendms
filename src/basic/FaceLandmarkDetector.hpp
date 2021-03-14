@@ -1,7 +1,7 @@
 #ifndef FaceLandmarkDetector_hpp
 #define FaceLandmarkDetector_hpp
 #include <includes.hpp>
-#include <basic/Frame.hpp>
+#include <Frame.hpp>
 #include <opencv2/core.hpp>
 #include <MNN/ImageProcess.hpp>
 #include <MNN/Interpreter.hpp>

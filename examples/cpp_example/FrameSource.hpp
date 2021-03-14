@@ -5,7 +5,7 @@
 #include <memory>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
-#include <basic/Frame.hpp>
+#include <Frame.hpp>
 namespace opendms
 {
     class FrameSource{

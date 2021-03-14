@@ -1,4 +1,5 @@
 {
+    "log_level" : "debug",
     "pipline":{
         "camera":{
             "intrinsic_matrix":[],
