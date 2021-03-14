@@ -1,0 +1,7 @@
+IF(BUILD_EXAMPLE)
+    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../../)
+    file(GLOB DMS_EXAMPLE_SRC ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+    message("DMS_EXAMPLE_SRC" ${DMS_EXAMPLE_SRC})
+    add_executable(demo.out ${DMS_EXAMPLE_SRC})
+    target_link_libraries(demo.out PRIVATE spdlog::spdlog ${OpenCV_LIBS}   MNN dms)
+ENDIF()
