@@ -1,17 +1,25 @@
 #include "FrameSource.hpp"
 #include <opencv2/videoio.hpp>
-#include <includes.hpp>
-#include <utils/common_utils.hpp>
 #include <stdexcept>
+#include <fstream>
+#include <iostream>
 
 namespace opendms
 {
+    namespace{
+        bool FileExists(const std::string& filename){
+            std::ifstream s(filename);
+            return s.is_open();
+        }
+    }
     FrameSource::FrameSource(const std::string& video_name){
         _cap.reset(new cv::VideoCapture());
-        lg->info("loading video {}", video_name);
-        ASSERT(FileExists(video_name));
+        std::cout<<"loading video "<< video_name<<std::endl;
+        if(!FileExists(video_name)){
+            std::cout<<video_name <<" does not exists"<<std::endl;
+        }
         if(!_cap->open(video_name)){
-            lg->critical("can not open {}", video_name);
+            std::cout<<"can not open "<< video_name<<std::endl;
         }
     }
 
@@ -23,7 +31,7 @@ namespace opendms
         if(_cap->isOpened()){
             cv::Mat frame;
             bool success = _cap->read(frame);
-            ASSERT(success);
+            assert(success);
             double timestamp = _cap->get(cv::CAP_PROP_POS_MSEC);
             return Frame(frame, timestamp);
         }

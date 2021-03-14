@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(opendms)
+option(BUILD_EXAMPLE "Build example or not" ON)
 message(STATUS "\tProcessor: ${PLATFORM}")
 IF(PLATFORM MATCHES "^aarch64")
     message("build for aarch64")
@@ -12,6 +13,7 @@ SET(CMAKE_CXX_FLAGS "-Wall -O0 -g3 -fPIC")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+add_definitions(-fPIC)
 find_package(Threads REQUIRED)
 IF(PLATFORM MATCHES "^aarch64")
     find_package (spdlog REQUIRED PATHS /install_aarch64/)
@@ -27,7 +29,8 @@ ENDIF()
 
 MESSAGE( " *** OpenCV_INCLUDE_DIRS : " ${OpenCV_INCLUDE_DIRS} )
 MESSAGE( " *** OpenCV_LIBS : " ${OpenCV_LIBS} )
-MESSAGE("lib dir:", ${LIB_DIR})
+MESSAGE("lib dir:" ${LIB_DIR})
+MESSAGE("INC_DIR:" ${INC_DIR})
 
 SET(TEST_SRC 
     src/basic/FaceDetector.cpp
@@ -39,23 +42,21 @@ SET(TEST_SRC
 
 FILE(GLOB DMS_baisc_src src/basic/*)
 FILE(GLOB DMS_utils_src src/utils/*)
-FILE(GLOB DMS_ui_src src/ui/*)
-set(DMS_LIB_SRC ${DMS_baisc_src} ${DMS_utils_src})
-set(DMS_EXTRA_SRC ${DMS_ui_src})
+set(DMS_LIB_SRC src/api.cpp ${DMS_baisc_src} ${DMS_utils_src})
 
 include_directories(
+    include/
     src/
     3rdparty/nlohmann
     3rdparty/
     ${OpenCV_INCLUDE_DIRS}
-    ${INC_DIR}/MNN
-    ${INC_DIR}/spdlog
+    ${INC_DIR}
 )
 
 LINK_DIRECTORIES(
     ${LIB_DIR}
 )
-# MESSAGE("source files:", ${DMS_LIB_SRC}, ${DMS_EXTRA_SRC})
-add_executable(demo ${DMS_LIB_SRC} ${DMS_EXTRA_SRC} src/main.cpp)
-# target_include_directories(demo PRIVATE )
-target_link_libraries(demo PRIVATE  ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT} spdlog::spdlog MNN)
+
+add_library(dms SHARED ${DMS_LIB_SRC})
+target_link_libraries(dms PRIVATE spdlog::spdlog ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT}  MNN)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples/cpp_example)

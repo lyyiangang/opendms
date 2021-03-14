@@ -11,6 +11,7 @@ namespace opendms{
             Frame(const cv::Mat& img, double timestamp):img(img), timestamp(timestamp)
             {
             }
+
             Frame& operator=(const Frame& f){
                 this->img = f.img;
                 this->timestamp = f.timestamp;
