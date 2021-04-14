@@ -48,7 +48,7 @@ namespace opendms
         }
 
         lg->set_level(str_to_val_map[default_log_level]);
-        _pipeline = std::make_unique<Pipeline>(js["pipline"]);
+        _pipeline = std::make_unique<Pipeline>(js["pipeline"]);
         return 0;
     }
 
