@@ -8,7 +8,7 @@ namespace opendms{
             Frame():timestamp(0){
             }
 
-            Frame(const cv::Mat& img, double timestamp):img(img), timestamp(timestamp)
+            Frame(const cv::Mat& img, double timestamp = 0):img(img), timestamp(timestamp)
             {
             }
 

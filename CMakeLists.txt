@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(opendms)
 option(BUILD_EXAMPLE "Build example or not" ON)
+option(BUILD_TEST "build tests or not" ON)
 message(STATUS "\tProcessor: ${PLATFORM}")
 IF(PLATFORM MATCHES "^aarch64")
     message("build for aarch64")
@@ -32,13 +33,6 @@ MESSAGE( " *** OpenCV_LIBS : " ${OpenCV_LIBS} )
 MESSAGE("lib dir:" ${LIB_DIR})
 MESSAGE("INC_DIR:" ${INC_DIR})
 
-SET(TEST_SRC 
-    src/basic/FaceDetector.cpp
-    # test/test_face_detector.cpp
-#   ${CMAKE_CURRENT_SOURCE_DIR}/test/test.cpp
-#   ${CMAKE_CURRENT_SOURCE_DIR}/test/test_logger.cpp
-
-)
 
 FILE(GLOB DMS_baisc_src src/basic/*)
 FILE(GLOB DMS_utils_src src/utils/*)
@@ -60,3 +54,4 @@ LINK_DIRECTORIES(
 add_library(dms SHARED ${DMS_LIB_SRC})
 target_link_libraries(dms PRIVATE spdlog::spdlog ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT}  MNN)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples/cpp_example)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/test/)
