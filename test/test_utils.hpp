@@ -4,6 +4,6 @@
 
 namespace opendms{
 
-    void PlotLandmark(cv::Mat& img, const cv::Mat& landmarks);
+    void PlotLandmark(cv::Mat& img, const cv::Mat& landmarks, bool plot_idx = false);
 }
 #endif

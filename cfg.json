@@ -14,6 +14,9 @@
             },
             "face_landmark_detector":{
                 "model_path" : "../models/landmark_detector/pfld_mb1.0.mnn"
+            },
+            "eye_landmark_detector":{
+                "model_path" :"../models/eye_landmark_detector/checkpoint-epoch50.pth.onnx.mnn"
             }
         },
         "distraction":{
