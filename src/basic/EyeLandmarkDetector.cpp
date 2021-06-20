@@ -2,6 +2,7 @@
 #include <utils/common_utils.hpp>
 #include <opencv2/imgproc.hpp>
 #include <includes.hpp>
+#include <iostream>
 
 namespace opendms{
     EyeLandmarkDetector::EyeLandmarkDetector(const std::string& model_path){
@@ -55,13 +56,14 @@ namespace opendms{
             MNN::Tensor host_ts(lnd_output_ts, MNN::Tensor::CAFFE);
             lnd_output_ts->copyToHostTensor(&host_ts);
             cv::Mat lnd_mat(7, 2, CV_32FC1, host_ts.host<float>());
+            std::cout<<"lnd:"<<lnd_mat<<std::endl;
             if(ii == 1){
                 lnd_mat.col(0) = 1.0 - lnd_mat.col(0);
                 lnd_mat.col(0) = lnd_mat.col(0) * w + roi_rect.x;
                 lnd_mat.col(1) = lnd_mat.col(1) * w + roi_rect.y;
                 std::vector<int> map_idx = {39, 38, 37, 36, 41, 40};
                 for(int idx = 0; idx < map_idx.size(); ++idx){
-                    corrected_face_landmarks->row(map_idx[idx]) = lnd_mat.row(idx);
+                    lnd_mat.row(idx).copyTo(corrected_face_landmarks->row(map_idx[idx]));
                 }
             }
             else{
@@ -69,7 +71,7 @@ namespace opendms{
                 lnd_mat.col(1) = lnd_mat.col(1) * w + roi_rect.y;
                 std::vector<int> map_idx = {42, 43, 44, 45, 46, 47};
                 for(int idx = 0; idx < map_idx.size(); ++idx){
-                    corrected_face_landmarks->row(map_idx[idx]) = lnd_mat.row(idx);
+                    lnd_mat.row(idx).copyTo(corrected_face_landmarks->row(map_idx[idx]));
                 }
 
             }
