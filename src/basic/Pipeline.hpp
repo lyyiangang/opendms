@@ -1,5 +1,6 @@
 #ifndef Pipline_hpp
 #define Pipline_hpp
+
 #include <includes.hpp>
 #include <basic/FaceTracker.hpp>
 #include <basic/Distraction.hpp>

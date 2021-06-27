@@ -1,13 +1,14 @@
 #include "EyeLandmarkDetector.hpp"
 #include <utils/common_utils.hpp>
 #include <opencv2/imgproc.hpp>
+// #include <opencv2/highgui.hpp>
 #include <includes.hpp>
 #include <iostream>
 
 namespace opendms{
     EyeLandmarkDetector::EyeLandmarkDetector(const std::string& model_path){
-        float means[3] = {0, 0, 0.0};
-        float std[3] = {1.0/256, 1.0/ 256, 1.0/ 256};
+        float means[3] = {127.5, 127.5, 127.5};
+        float std[3] = {1/127.5, 1/127.5, 1/127.5};
         _preprocess.reset(
             MNN::CV::ImageProcess::create(MNN::CV::ImageFormat::BGR,
             MNN::CV::RGB, \
@@ -18,6 +19,7 @@ namespace opendms{
         );
         lg->info("loading eye landmark detector model {}", model_path);
         _interpreter.reset(MNN::Interpreter::createFromFile(model_path.c_str()));
+        ASSERT(_interpreter.get()!= nullptr);
         MNN::ScheduleConfig cfg;
         _session = _interpreter->createSession(cfg);
     }
@@ -33,7 +35,7 @@ namespace opendms{
             {42, 45},
             {39, 36}
         };
-        const int net_size[2] = {112, 112};
+        const int net_size[2] = {64, 64};
         *corrected_face_landmarks = face_landmark_68.clone();
         cv::Point2f pupil_centers[2];
         for(int ii = 0; ii < 2; ++ii){
@@ -48,15 +50,13 @@ namespace opendms{
             if(ii == 1){
                 cv::flip(eye_img, eye_img, 1);
             }
-
             MNN::Tensor* input_ts = _interpreter->getSessionInput(_session, "input.1");
-            _preprocess->convert(eye_img.data, net_size[0], net_size[1], 0, input_ts);
+            _preprocess->convert(eye_img.data, net_size[0], net_size[1], eye_img.step[0], input_ts);
             _interpreter->runSession(_session); 
             MNN::Tensor* lnd_output_ts = _interpreter->getSessionOutput(_session, "86");
             MNN::Tensor host_ts(lnd_output_ts, MNN::Tensor::CAFFE);
             lnd_output_ts->copyToHostTensor(&host_ts);
-            cv::Mat lnd_mat(7, 2, CV_32FC1, host_ts.host<float>());
-            std::cout<<"lnd:"<<lnd_mat<<std::endl;
+            cv::Mat lnd_mat(6, 2, CV_32FC1, host_ts.host<float>());
             if(ii == 1){
                 lnd_mat.col(0) = 1.0 - lnd_mat.col(0);
                 lnd_mat.col(0) = lnd_mat.col(0) * w + roi_rect.x;
@@ -75,7 +75,7 @@ namespace opendms{
                 }
 
             }
-            pupil_centers[ii] = {lnd_mat.at<float>(6, 0), lnd_mat.at<float>(6, 1)};
+            // pupil_centers[ii] = {lnd_mat.at<float>(6, 0), lnd_mat.at<float>(6, 1)};
         }
         return true;
     }

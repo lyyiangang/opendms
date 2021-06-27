@@ -38,9 +38,9 @@ namespace opendms
     cv::Mat Crop(const cv::Mat& img, const cv::Rect& rect){
         int w = img.cols;
         int h = img.rows;
-        cv::Rect img_rect(0, 0, w, h);
-        if(!img_rect.contains(rect.tl()) && !img_rect.contains(rect.br()))
-            return cv::Mat();
+        // cv::Rect img_rect(0, 0, w, h);
+        // if(!img_rect.contains(rect.tl()) && !img_rect.contains(rect.br()))
+        //     return cv::Mat();
         cv::Mat sub_img = img(cv::Range(rect.tl().y, rect.br().y), cv::Range(rect.tl().x, rect.br().x));
         cv::Mat target(rect.height, rect.width, img.type());
         int top = rect.tl().y >= 0 ? 0 : -1 * rect.tl().y;

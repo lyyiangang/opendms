@@ -15,7 +15,7 @@ int main(int arc, char** argv){
         std::cout<<"Error, can not init dms lib. error code:"<<ret <<std::endl;
         return 1;
     }
-    std::string video_file ="../p_data/ir_test.avi";
+    std::string video_file ="../p_data/close_eye_rgb.avi";
     cv::VideoCapture cap(video_file);
     if(!cap.isOpened()){
         std::cout<<"can not open video "<<video_file<<std::endl;

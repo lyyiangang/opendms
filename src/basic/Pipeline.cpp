@@ -19,8 +19,13 @@ namespace opendms
     int Pipeline::ProcessFrame(const Frame& frame){
         _face_tracker->ExtractFaceData(frame);
         _face_data = _face_tracker->GetFaceData();
+
         _distract->Process(frame, _face_data);
+        _face_data.distract = _distract->is_distract;
+
         _fatigue->Process(frame, _face_data);
+        _face_data.eye_openness[0] = _fatigue->eye_openness[0];
+        _face_data.eye_openness[1] = _fatigue->eye_openness[1];
         return ERROR_SUCCESS;
     }
 } // namespace opendms

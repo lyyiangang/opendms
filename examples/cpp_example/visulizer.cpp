@@ -27,10 +27,16 @@ namespace opendms
                                     " roll:"<< std::setw(w) <<pyr_deg[2];
         cv::Point pos(0, 30);
         cv::putText(_frame.img, ss.str(), pos, cv::FONT_HERSHEY_COMPLEX, 1.0, {0, 0, 255});
+
+        pos.y += 40;
         ss.str("");
         ss << "X:"<< face_data.head_rt[3]<<" Y:"<<face_data.head_rt[4]<<" Z:"<<face_data.head_rt[5];
-        pos.y += 40;
         cv::putText(_frame.img, ss.str(), pos, cv::FONT_HERSHEY_COMPLEX, 1.0, {0, 0, 255});
+
+        pos.y += 40;
+        ss.str("");
+        ss << "left openness:"<<face_data.eye_openness[0]<<" right openness:"<<face_data.eye_openness[1];
+        cv::putText(_frame.img, ss.str(), pos, cv::FONT_HERSHEY_COMPLEX, 0.5, {0, 0, 255});
     }
     
     void Visulizer::Show()const{

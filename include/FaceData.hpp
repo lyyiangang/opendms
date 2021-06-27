@@ -16,6 +16,8 @@ namespace opendms{
         cv::Vec3d pyr_to_cam; // head pose in radius. pitch, yaw, roll order
 
         bool distract = false;
+        bool yaw = false;
+        float eye_openness[2]={1, 1};
     };
 }
 #endif 

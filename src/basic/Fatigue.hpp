@@ -11,7 +11,8 @@ namespace opendms
             //close eye? yawn? 
             bool Process(const Frame& frame, const FaceData& face_data);
 
-            bool close_eye, yawn;
+            bool yawn;
+            cv::Vec2f eye_openness;
         private:
     };
 } // namespace opendms
