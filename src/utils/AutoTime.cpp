@@ -56,7 +56,7 @@ AutoTime::AutoTime(int line, const char* func) : Timer() {
 
 AutoTime::~AutoTime() {
     auto timeInUs = durationInUs();
-    printf("%s, %d, cost time: %f ms\n", mName, mLine, (float)timeInUs / 1000.0f);
+    printf("autotime %s, %d, cost time: %f ms\n", mName, mLine, (float)timeInUs / 1000.0f);
 
     free(mName);
 }

@@ -3,11 +3,12 @@
 #include <iostream>
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
+#include <includes.hpp>
 #include "visulizer.hpp"
 #include <error_code.hpp>
 using namespace opendms;
 
-int main(int arc, char** argv){
+int main(int argc, char** argv){
     DMS dms;
     std::string cfg_file = "../cfg.json";
     int ret = dms.init(cfg_file);
@@ -15,7 +16,11 @@ int main(int arc, char** argv){
         std::cout<<"Error, can not init dms lib. error code:"<<ret <<std::endl;
         return 1;
     }
-    std::string video_file ="../p_data/close_eye_rgb.avi";
+    if(argc <2){
+        std::cout<<"Error. you should set 1 input argument.e.g. demo.out ../data/test.mp4\n";
+        return 1;
+    }
+    std::string video_file = argv[1];
     cv::VideoCapture cap(video_file);
     if(!cap.isOpened()){
         std::cout<<"can not open video "<<video_file<<std::endl;

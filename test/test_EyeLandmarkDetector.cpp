@@ -8,6 +8,7 @@
 
 int main(int argn, const char** argv){
     opendms::RegistLogger();
+    // load model name from config file
     std::ifstream mystream("../cfg.json");
     json js;
     mystream >> js;

@@ -24,6 +24,16 @@ namespace opendms
 
     cv::Mat Estimate3dLandmark(const cv::Mat& lnd_2d, const cv::Mat& template_face_mat, cv::Vec6d* landmark_3d,
         const cv::Mat& intrinsic = cv::Mat(), const cv::Mat& dist_coefs = cv::Mat());
+    
+    template <typename T>
+    T Clamp(T input, T min, T max){
+        if(input > max)
+            return max;
+        else if (input < min)
+            return min;
+        else
+            return input;
+    }
 
     // convert mili sec unit to sec
     static inline float Sec(double start_timestamp, double end_timestamp){return (end_timestamp - start_timestamp) * 1e-3;};

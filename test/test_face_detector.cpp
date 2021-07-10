@@ -1,44 +1,39 @@
 //  Created by Linzaer on 2019/11/15.
 //  Copyright © 2019 Linzaer. All rights reserved.
 
-#include <basic/UltraFace.hpp>
+#include <basic/FaceDetector.hpp>
+#include <utils/common_utils.hpp>
+#include <includes.hpp>
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include <opencv2/opencv.hpp>
 
-using namespace std;
-
 int main(int argc, char **argv) {
-    if (argc <= 2) {
-        fprintf(stderr, "Usage: %s <mnn .mnn> [image files...]\n", argv[0]);
-        std::cout<<"demo command:"<<"./Ultra-face-mnn ../model/version-RFB/RFB-320.mnn  ../imgs/1.jpg "<<std::endl;
+    opendms::RegistLogger();
+    std::ifstream mystream("../cfg.json");
+    json js;
+    mystream >> js;
+    std::string path;
+    try{
+        path = js["pipeline"]["face_tracker"]["face_detector"]["model_path"];
+        lg->info("model path:{}", path);
+    }
+    catch(json::exception& e){
+        lg->critical("error when parse config file.messgae:{}, id:{}", e.what(), e.id);
         return 1;
     }
-
-    string mnn_path = argv[1];
-    FaceDetector ultraface(mnn_path, 320, 240, 4, 0.65); // config model input
-
-    for (int i = 2; i < argc; i++) {
-        string image_file = argv[i];
-        cout << "Processing " << image_file << endl;
-
-        cv::Mat frame = cv::imread(image_file);
-        auto start = chrono::steady_clock::now();
-        vector<FaceInfo> face_info;
-        ultraface.detect(frame, face_info);
-
-        for (auto face : face_info) {
-            cv::Point pt1(face.x1, face.y1);
-            cv::Point pt2(face.x2, face.y2);
-            cv::rectangle(frame, pt1, pt2, cv::Scalar(0, 255, 0), 2);
-        }
-
-        auto end = chrono::steady_clock::now();
-        chrono::duration<double> elapsed = end - start;
-        cout << "all time: " << elapsed.count() << " s" << endl;
-        cv::imshow("UltraFace", frame);
-        cv::waitKey();
-        string result_name = "result" + to_string(i) + ".jpg";
-        cv::imwrite(result_name, frame);
+    opendms::FaceDetector ultraface(path, 320, 240, 4, 0.65); // config model input
+    cv::Mat test_img = cv::imread("../data/1.jpg");
+    std::vector<opendms::DetBox> det_results;
+    int ret = ultraface.detect(test_img, det_results);
+    ASSERT(ret == 0);
+    lg->info("find {} faces on this image", det_results.size());
+    for(auto result : det_results){
+        cv::rectangle(test_img, result.rect, cv::Scalar(0, 255, 0), 2);
     }
+    std::string output_file = "face_det_results.png";
+    lg->info("writing det result to {}", output_file);
+    cv::imwrite(output_file, test_img);
     return 0;
 }

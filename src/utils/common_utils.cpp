@@ -41,7 +41,11 @@ namespace opendms
         // cv::Rect img_rect(0, 0, w, h);
         // if(!img_rect.contains(rect.tl()) && !img_rect.contains(rect.br()))
         //     return cv::Mat();
-        cv::Mat sub_img = img(cv::Range(rect.tl().y, rect.br().y), cv::Range(rect.tl().x, rect.br().x));
+        int start_y = Clamp(rect.tl().y, 0, h - 1);
+        int end_y = Clamp(rect.br().y, 0, h -1);
+        int start_x = Clamp(rect.tl().x, 0, w - 1);
+        int end_x = Clamp(rect.br().x, 0, w - 1);
+        cv::Mat sub_img = img(cv::Range(start_y, end_y), cv::Range(start_x, end_x));
         cv::Mat target(rect.height, rect.width, img.type());
         int top = rect.tl().y >= 0 ? 0 : -1 * rect.tl().y;
         int bottom = rect.br().y > (h - 1) ? (rect.br().y - (h - 1)) : 0;

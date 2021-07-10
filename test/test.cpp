@@ -4,9 +4,16 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/cfg/env.h"
+#include <utils/common_utils.hpp>
 #include <opencv2/core.hpp>
 
+// void TestFunction(){
+//     std::cout<<opendms::Clamp(1.8, 0.0, 1.0)<<"\n";
+// }
+
 int main(int arc, char** arv){
+    // TestFunction();
+    // return 0;
     cv::Mat mat;
     // export SPDLOG_LEVEL=info,mylogger=trace && ./demo
     spdlog::info("Welcome to spdlog version {}.{}.{}  !", SPDLOG_VER_MAJOR, SPDLOG_VER_MINOR, SPDLOG_VER_PATCH);

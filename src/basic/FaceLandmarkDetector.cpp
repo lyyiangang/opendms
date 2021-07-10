@@ -1,7 +1,6 @@
 #include <basic/FaceLandmarkDetector.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/calib3d.hpp>
-// #include <opencv2/imgcodecs.hpp>
 #include <memory>
 #include <iostream>
 #include <utils/common_utils.hpp>
@@ -31,6 +30,8 @@ namespace opendms
 
     bool FaceLandmarkDetector::Process(const Frame& frame, const cv::Rect2f& face_box){
         AUTOTIME;
+        if(face_box.empty())
+            return false;
         cv::Rect2f square_face_rect = Square(face_box);
         cv::Mat face_img = Crop(frame.img, square_face_rect);
         const int net_size[2] = {112, 112};
@@ -50,8 +51,22 @@ namespace opendms
         landmark68_3d = Estimate3dLandmark(lnd_mat, NormFaceLandmark68(), &head_rt, DefaultIntrinsicMat(frame.img.size()));
         cv::Mat rmat;
         cv::Rodrigues(cv::Mat(3, 1, CV_64FC1, head_rt.val), rmat);
-        cv::Mat mtxR, mtxQ;
-        pyr_to_cam = cv::RQDecomp3x3(rmat, mtxR, mtxQ) * M_PI / 180.0;//get head pose
+        // cv::Mat mtxR, mtxQ;
+        // pyr_to_cam = cv::RQDecomp3x3(rmat, mtxR, mtxQ) * M_PI / 180.0;//get head pose
+        cv::Mat rtmat;
+        cv::Mat cat_mat[]={rmat, cv::Mat(3, 1, CV_64FC1, head_rt.val + 3)};
+        cv::hconcat(cat_mat, 2, rtmat);
+        cv::Mat eulars;
+        cv::Mat K(3,3,cv::DataType<float>::type); // intrinsic parameter matrix
+        cv::Mat R(3,3,cv::DataType<float>::type); // rotation matrix
+        cv::Mat T(4,1,cv::DataType<float>::type); // translation vector
+        cv::decomposeProjectionMatrix(rtmat, K, R, T,
+            cv::noArray(), cv::noArray(), cv::noArray(), eulars); 
+        eulars /= 180.0;
+        pyr_to_cam[0] = eulars.at<double>(0);
+        pyr_to_cam[1] = eulars.at<double>(1);
+        pyr_to_cam[2] = eulars.at<double>(2);
+
         return true;
     }
 
