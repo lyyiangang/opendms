@@ -6,18 +6,22 @@
 #include <fstream>
 #include <iostream>
 
-int main(int argn, const char** argv){
+int main(int argn, const char **argv)
+{
     opendms::RegistLogger();
     // load model name from config file
     std::ifstream mystream("../cfg.json");
     json js;
     mystream >> js;
+
     std::string path;
-    try{
+    try
+    {
         path = js["pipeline"]["face_tracker"]["eye_landmark_detector"]["model_path"];
         lg->info("model path:{}", path);
     }
-    catch(json::exception& e){
+    catch (json::exception &e)
+    {
         lg->critical("error when parse config file.messgae:{}, id:{}", e.what(), e.id);
         return 1;
     }
@@ -29,14 +33,14 @@ int main(int argn, const char** argv){
     std::unique_ptr<opendms::EyeLandmarkDetector> eye_lnd_det = std::make_unique<opendms::EyeLandmarkDetector>(path);
     cv::Mat correct_face_land68;
     eye_lnd_det->Predict(img, face_landmark68, &correct_face_land68);
-    std::cout<<"origin landmark:"<<face_landmark68<<std::endl;
-    std::cout<<"correct landmark:"<<correct_face_land68<<std::endl;
+    std::cout << "origin landmark:" << face_landmark68 << std::endl;
+    std::cout << "correct landmark:" << correct_face_land68 << std::endl;
     opendms::PlotLandmark(img, correct_face_land68);
     cv::imshow("after_correct", img);
 
     opendms::PlotLandmark(ori_img, face_landmark68);
     cv::imshow("ori", ori_img);
-    
+
     cv::waitKey(0);
     return 0;
 }
