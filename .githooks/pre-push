@@ -18,6 +18,7 @@ remote="$1"
 url="$2"
 
 z40=0000000000000000000000000000000000000000
+echo "in pre push"
 
 while read local_ref local_sha remote_ref remote_sha
 do
