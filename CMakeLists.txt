@@ -4,6 +4,7 @@ option(BUILD_EXAMPLE "Build example or not" ON)
 option(BUILD_TEST "build tests or not" ON)
 option(DEBUG "build tests or not" OFF)
 message(STATUS "\tProcessor: ${PLATFORM}")
+
 IF(PLATFORM MATCHES "^aarch64")
     message("build for aarch64")
     set(CMAKE_C_COMPILER /gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc)
@@ -57,6 +58,7 @@ LINK_DIRECTORIES(
     ${LIB_DIR}
 )
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/lint.cmake)
 add_library(dms SHARED ${DMS_LIB_SRC})
 target_link_libraries(dms PRIVATE spdlog::spdlog ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT}  MNN)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/examples/cpp_example)
