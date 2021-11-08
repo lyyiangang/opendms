@@ -35,7 +35,7 @@ do
     done
 
     echo "Performing linter check: python tools/lint.py . --nproc=5 --file-list $file_list_arg"
-    python tools/lint.py . --nproc=5 --file-list $file_list_arg || exit 1
+    python3 tools/lint.py . --nproc=5 --file-list $file_list_arg || exit 1
     echo "OK"
 done
 
