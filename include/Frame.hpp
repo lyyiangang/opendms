@@ -21,4 +21,4 @@ namespace opendms{
             double timestamp;//mili sec
     };
 }
-#endif 
+#endif
