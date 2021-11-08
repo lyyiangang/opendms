@@ -18,6 +18,8 @@
 files=`git diff --cached --name-only`
 year=`date +%Y`
 
+echo "in pre commit"
+exit 1
 git rev-parse -q --verify MERGE_HEAD && \
     echo "Merge commit, skipping hooks" && exit 0
 
